@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import axios from "axios";
+
 export const Content = () => {
   const [todo, setTodo] = React.useState("");
   const [todos, setTodos] = React.useState([]);
@@ -17,7 +18,7 @@ export const Content = () => {
   const addTodo = async () => {
     const res = await axios.post(
       "http://localhost:3000/api/todos",
-      { todo, completed: false },
+      JSON.stringify({ todo, completed: false }),
       {
         headers: {
           "Content-Type": "application/json",

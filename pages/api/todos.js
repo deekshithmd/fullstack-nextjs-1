@@ -1,18 +1,21 @@
 import { todos } from "../../data/todos";
-export default function handler(req, res) {
+import { connectToDB } from "@/lib/mongodb";
+
+export default async function handler(req, res) {
   const { method } = req;
+  const { db } = await connectToDB();
   switch (method) {
     case "GET":
-      return res.status(200).json(todos);
+      const todos = await db.collection("todo").find().toArray();
+      res.status(200).json(todos);
       break;
     case "POST":
-      const { todo, completed } = req.body;
-      todos.push({
-        id: todos.length + 1,
-        todo,
-        completed,
-      });
-      res.status(200).json(todos);
+      const todo = req.body;
+      let myTodos = await db.collection("todo").insertOne(todo);
+      if (myTodos?.acknowledged) {
+        const todos = await db.collection("todo").find().toArray();
+        res.status(200).json(todos);
+      }
       break;
     default:
       res.setHeader("Allow", ["GET", "POST"]);
