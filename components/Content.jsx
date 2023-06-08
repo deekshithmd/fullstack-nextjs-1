@@ -5,17 +5,22 @@ import axios from "axios";
 export const Content = () => {
   const [todo, setTodo] = React.useState("");
   const [todos, setTodos] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [newTodoLoading, setNewTodoLoading] = React.useState(false);
 
   React.useEffect(() => {
     getTodos();
   }, []);
 
   const getTodos = async () => {
+    setLoading(true);
     const res = await axios.get("http://localhost:3000/api/todos");
     setTodos(res.data);
+    setLoading(false);
   };
 
   const addTodo = async () => {
+    setNewTodoLoading(true);
     const res = await axios.post(
       "http://localhost:3000/api/todos",
       JSON.stringify({ todo, completed: false }),
@@ -27,6 +32,7 @@ export const Content = () => {
     );
     setTodos(res.data);
     setTodo("");
+    setNewTodoLoading(false);
   };
   return (
     <div>
@@ -48,39 +54,46 @@ export const Content = () => {
             alignItems: "center",
           }}
         >
-          {todos?.map((todo) => {
-            return (
-              <div
-                key={todo?.id}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent:'space-between',
-                  marginBottom: "10px",
-                  border: "1px solid black",
-                  padding: '2px 5px'
-                }}
-              >
-                <p
-                  style={{
-                    color: `${todo?.completed ? "red" : "green"}`,
-                    textDecoration: `${
-                      todo?.completed ? "line-through" : "none"
-                    }`,
-                    marginRight: "10px",
-                  }}
-                >
-                  {todo.todo}
-                </p>
-                {!todo?.completed && (
-                  <button style={{ padding: "2px 10px" }}>Edit</button>
-                )}
-                {todo?.completed && (
-                  <button style={{ padding: "2px 10px" }}>Delete</button>
-                )}
-              </div>
-            );
-          })}
+          {loading ? (
+            <h3>Loading...</h3>
+          ) : (
+            <>
+              {todos?.map((todo) => {
+                return (
+                  <div
+                    key={todo?.id}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "10px",
+                      border: "1px solid black",
+                      padding: "2px 5px",
+                    }}
+                  >
+                    <p
+                      style={{
+                        color: `${todo?.completed ? "red" : "green"}`,
+                        textDecoration: `${
+                          todo?.completed ? "line-through" : "none"
+                        }`,
+                        marginRight: "10px",
+                      }}
+                    >
+                      {todo.todo}
+                    </p>
+                    {!todo?.completed && (
+                      <button style={{ padding: "2px 10px" }}>Edit</button>
+                    )}
+                    {todo?.completed && (
+                      <button style={{ padding: "2px 10px" }}>Delete</button>
+                    )}
+                  </div>
+                );
+              })}
+            </>
+          )}
+          <>{newTodoLoading && <h3>Adding</h3>}</>
         </div>
       </div>
       <div
