@@ -1,4 +1,3 @@
-import { todos } from "../../data/todos";
 import { connectToDB } from "@/lib/mongodb";
 
 export default async function handler(req, res) {

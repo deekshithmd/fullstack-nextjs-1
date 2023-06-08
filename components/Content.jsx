@@ -50,17 +50,34 @@ export const Content = () => {
         >
           {todos?.map((todo) => {
             return (
-              <div key={todo?.id}>
+              <div
+                key={todo?.id}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent:'space-between',
+                  marginBottom: "10px",
+                  border: "1px solid black",
+                  padding: '2px 5px'
+                }}
+              >
                 <p
                   style={{
                     color: `${todo?.completed ? "red" : "green"}`,
                     textDecoration: `${
                       todo?.completed ? "line-through" : "none"
                     }`,
+                    marginRight: "10px",
                   }}
                 >
                   {todo.todo}
                 </p>
+                {!todo?.completed && (
+                  <button style={{ padding: "2px 10px" }}>Edit</button>
+                )}
+                {todo?.completed && (
+                  <button style={{ padding: "2px 10px" }}>Delete</button>
+                )}
               </div>
             );
           })}

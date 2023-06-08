@@ -9,9 +9,11 @@ export const Navigation = () => {
         position: "fixed",
         top: "0px",
         right: "0px",
+        display:'flex',
+        alignItems:'center'
       }}
     >
-      <h1>FullStack NextJS</h1>
+      <h1>Todo App</h1>
     </div>
   );
 };
