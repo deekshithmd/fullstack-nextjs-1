@@ -14,7 +14,7 @@ export const Content = () => {
 
   const getTodos = async () => {
     setLoading(true);
-    const res = await axios.get("http://localhost:3000/api/todos");
+    const res = await axios.get("http://localhost:3000/api/getTodo");
     setTodos(res.data);
     setLoading(false);
   };
@@ -22,7 +22,7 @@ export const Content = () => {
   const addTodo = async () => {
     setNewTodoLoading(true);
     const res = await axios.post(
-      "http://localhost:3000/api/todos",
+      "http://localhost:3000/api/addTodo",
       JSON.stringify({ todo, completed: false }),
       {
         headers: {
@@ -34,6 +34,35 @@ export const Content = () => {
     setTodo("");
     setNewTodoLoading(false);
   };
+
+  const handleDeleteTodo = async (todoId) => {
+    const res = await axios.post(
+      "http://localhost:3000/api/deleteTodo",
+      {
+        id: todoId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    setTodos(res.data);
+  };
+
+  const updateTodo = async (id, todo) => {
+    const res = await axios.post(
+      `http://localhost:3000/api/editTodo?id=${id}`,
+      JSON.stringify(todo),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    setTodos(res.data);
+  };
+
   return (
     <div>
       <div
@@ -61,7 +90,7 @@ export const Content = () => {
               {todos?.map((todo) => {
                 return (
                   <div
-                    key={todo?.id}
+                    key={todo?._id}
                     style={{
                       width: "100%",
                       display: "flex",
@@ -83,10 +112,28 @@ export const Content = () => {
                       {todo.todo}
                     </p>
                     {!todo?.completed && (
-                      <button style={{ padding: "2px 10px" }}>Edit</button>
+                      <div>
+                        <button style={{ padding: "2px 10px" }}>Edit</button>
+                        <button
+                          style={{ padding: "2px 10px" }}
+                          onClick={() =>
+                            updateTodo(todo?._id, {
+                              todo: todo?.todo,
+                              completed: true,
+                            })
+                          }
+                        >
+                          Done
+                        </button>
+                      </div>
                     )}
                     {todo?.completed && (
-                      <button style={{ padding: "2px 10px" }}>Delete</button>
+                      <button
+                        style={{ padding: "2px 10px" }}
+                        onClick={() => handleDeleteTodo(todo?._id)}
+                      >
+                        Delete
+                      </button>
                     )}
                   </div>
                 );
