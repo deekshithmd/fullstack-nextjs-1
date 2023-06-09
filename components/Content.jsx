@@ -7,6 +7,8 @@ export const Content = () => {
   const [todos, setTodos] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [newTodoLoading, setNewTodoLoading] = React.useState(false);
+  const [editId, setEditId] = React.useState("");
+  const [editText, setEditText] = React.useState("");
 
   React.useEffect(() => {
     getTodos();
@@ -100,20 +102,52 @@ export const Content = () => {
                       padding: "2px 5px",
                     }}
                   >
-                    <p
-                      style={{
-                        color: `${todo?.completed ? "red" : "green"}`,
-                        textDecoration: `${
-                          todo?.completed ? "line-through" : "none"
-                        }`,
-                        marginRight: "10px",
-                      }}
-                    >
-                      {todo.todo}
-                    </p>
+                    {editId == todo?._id ? (
+                      <input
+                        type="text"
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                      />
+                    ) : (
+                      <p
+                        style={{
+                          color: `${todo?.completed ? "red" : "green"}`,
+                          textDecoration: `${
+                            todo?.completed ? "line-through" : "none"
+                          }`,
+                          marginRight: "10px",
+                        }}
+                      >
+                        {todo.todo}
+                      </p>
+                    )}
                     {!todo?.completed && (
                       <div>
-                        <button style={{ padding: "2px 10px" }}>Edit</button>
+                        {editId == todo?._id ? (
+                          <button
+                            style={{ padding: "2px 10px" }}
+                            onClick={() => {
+                              updateTodo(editId, {
+                                todo: editText,
+                                completed: false,
+                              });
+                              setEditId("");
+                              setEditText("");
+                            }}
+                          >
+                            Save
+                          </button>
+                        ) : (
+                          <button
+                            style={{ padding: "2px 10px" }}
+                            onClick={() => {
+                              setEditId(todo?._id);
+                              setEditText(todo?.todo);
+                            }}
+                          >
+                            Edit
+                          </button>
+                        )}
                         <button
                           style={{ padding: "2px 10px" }}
                           onClick={() =>
