@@ -76,6 +76,21 @@ export const Content = () => {
           marginBottom: "15px",
         }}
       >
+        <div style={{ marginBottom: "10px" }}>
+          <h3 style={{ textAlign: "center" }}>Add new todo</h3>
+          <input
+            type="text"
+            value={todo}
+            onChange={(e) => setTodo(e.target.value)}
+            style={{ padding: "2px 3px" }}
+          />
+          <button
+            style={{ padding: "2px 3px", marginLeft: "5px" }}
+            onClick={addTodo}
+          >
+            Add
+          </button>
+        </div>
         <h3>Todos</h3>
         <div
           style={{
@@ -138,27 +153,30 @@ export const Content = () => {
                             Save
                           </button>
                         ) : (
-                          <button
-                            style={{ padding: "2px 10px" }}
-                            onClick={() => {
-                              setEditId(todo?._id);
-                              setEditText(todo?.todo);
-                            }}
-                          >
-                            Edit
-                          </button>
+                          <>
+                            <button
+                              style={{ padding: "2px 10px" }}
+                              onClick={() => {
+                                setEditId(todo?._id);
+                                setEditText(todo?.todo);
+                              }}
+                            >
+                              Edit
+                            </button>
+
+                            <button
+                              style={{ padding: "2px 10px" }}
+                              onClick={() =>
+                                updateTodo(todo?._id, {
+                                  todo: todo?.todo,
+                                  completed: true,
+                                })
+                              }
+                            >
+                              Done
+                            </button>
+                          </>
                         )}
-                        <button
-                          style={{ padding: "2px 10px" }}
-                          onClick={() =>
-                            updateTodo(todo?._id, {
-                              todo: todo?.todo,
-                              completed: true,
-                            })
-                          }
-                        >
-                          Done
-                        </button>
                       </div>
                     )}
                     {todo?.completed && (
@@ -184,20 +202,7 @@ export const Content = () => {
           width: "100%",
           alignItems: "center",
         }}
-      >
-        <h3>Add new todo</h3>
-        <input
-          type="text"
-          value={todo}
-          onChange={(e) => setTodo(e.target.value)}
-        />
-        <button
-          style={{ padding: "2px 3px", marginTop: "5px" }}
-          onClick={addTodo}
-        >
-          Add
-        </button>
-      </div>
+      ></div>
     </div>
   );
 };
